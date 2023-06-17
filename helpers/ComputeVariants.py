@@ -1,10 +1,11 @@
 import pandas as pd
 import os
 import csv
-
-from DatasetManager import DatasetManager
-from Bucketers import get_bucketer
-from Encoders import get_encoder
+from sklearn.metrics import confusion_matrix
+from sklearn.pipeline import FeatureUnion
+from helpers.DatasetManager import DatasetManager
+from helpers.Bucketers import get_bucketer
+from helpers.Encoders import get_encoder
 from utils.retrieval import retrieve_artefact
 
 
@@ -76,7 +77,8 @@ for method_name in ['prefix_index','single_agg']:
       bucket_assignments_train = bucketer.fit_predict(df_train_prefixes)
       bucket_assignment_test = bucketer.predict(df_test_prefixes)
       for bucket in set(bucket_assignment_test):
-              
+              featureCombinerExperiment = FeatureUnion(
+                        [(method, get_encoder(method, **cls_encoder_args_final)) for method in methods])
               relevant_train_bucket = dm.get_indexes(df_train_prefixes)[bucket == bucket_assignments_train]
               relevant_test_bucket = dm.get_indexes(df_test_prefixes)[bucket == bucket_assignment_test]
               df_train_bucket = dm.get_data_by_indexes(df_train_prefixes, relevant_train_bucket)
