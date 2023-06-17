@@ -26,22 +26,17 @@ def get_corrs(folder, elias, logger):
               
               if 'anchor' in elias:
                   coverage_len_corr = df['coverage_vol'].corr(df['anchor_LenExpRule'])   
-                  cov =  df['coverage_vol'].values
-                  rlens = df['anchor_LenExpRule'].values
-                  fname = 'anchor_' +   cleaned_name  
+                  
                   
               elif 'lore' in elias:
                   coverage_len_corr = df['coverage_vol'].corr(df['lore_LenExpRule'])  
-                  cov =  df['coverage_vol'].values
-                  rlens = df['lore_LenExpRule'].values
-                  fname = 'lore_' +   cleaned_name   
+                   
               
               logger.info('now working on {0}'.format(name))
               
               corrs[fname] = coverage_len_corr
-              lens[fname] = rlens
-              coverage[fname] = cov
-    return corrs, lens, coverage
+ 
+    return corrs
     
 
 in_dir = 'rules'
@@ -50,8 +45,8 @@ logger_name = os.path.join(out_dir, f"correlations.log")
 logger = get_logger(logger_name)
 
 
-corrs_lore, _, _ = get_corrs(in_dir, 'prefinal_loreExp', logger)
-corrs_anchor, _, _  = get_corrs(in_dir, 'prefinal_anchorExp', logger)
+corrs_lore = get_corrs(in_dir, 'prefinal_loreExp', logger)
+corrs_anchor = get_corrs(in_dir, 'prefinal_anchorExp', logger)
 
 corrs_lore.update(corrs_anchor)
 
